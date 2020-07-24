@@ -1,0 +1,1249 @@
+Stan 52 konflikty: 2 przesunięcie/redukcja
+
+
+Gramatyka
+
+    0 $accept: program $end
+
+    1 program: DECLARE declarations BGN commands END
+    2        | BGN commands END
+
+    3 declarations: declarations COM IDE
+    4             | declarations COM IDE LB NUM COL NUM RB
+    5             | IDE
+    6             | IDE LB NUM COL NUM RB
+
+    7 commands: commands command
+    8         | command
+
+    9 command: identifier ASSIGN expression SEM
+   10        | IF condition THEN commands _else commands ENDIF
+   11        | IF condition THEN commands ENDIF
+   12        | _while condition DO commands ENDWHILE
+   13        | _do commands WHILE condition ENDDO
+   14        | FOR IDE _forFrom value _forTo value _forDo commands ENDFOR
+   15        | FOR IDE _forFrom value _forDownTo value _forDoDownTo commands ENDFOR
+   16        | READ identifier SEM
+   17        | WRITE value SEM
+
+   18 _else: ELSE
+
+   19 _while: WHILE
+
+   20 _do: DO
+
+   21 _forFrom: FROM
+
+   22 _forTo: TO
+
+   23 _forDownTo: DOWNTO
+
+   24 _forDo: DO
+
+   25 _forDoDownTo: DO
+
+   26 expression: value
+   27           | value PLUS value
+   28           | value MINUS value
+   29           | value TIMES value
+   30           | value DIV value
+   31           | value MOD value
+
+   32 condition: value EQ value
+   33          | value NEQ value
+   34          | value LE value
+   35          | value GE value
+   36          | value LEQ value
+   37          | value GEQ value
+
+   38 value: NUM
+   39      | identifier
+
+   40 identifier: IDE
+   41           | IDE LB IDE RB
+   42           | IDE LB NUM RB
+
+
+Symbole terminalne i reguły, w których występują
+
+$end (0) 0
+error (256)
+DECLARE (258) 1
+BGN (259) 1 2
+END (260) 1 2
+ASSIGN (261) 9
+IF (262) 10 11
+THEN (263) 10 11
+ELSE (264) 18
+ENDIF (265) 10 11
+WHILE (266) 13 19
+DO (267) 12 20 24 25
+ENDWHILE (268) 12
+ENDDO (269) 13
+FOR (270) 14 15
+FROM (271) 21
+TO (272) 22
+DOWNTO (273) 23
+ENDFOR (274) 14 15
+READ (275) 16
+WRITE (276) 17
+PLUS (277) 27
+MINUS (278) 28
+TIMES (279) 29
+DIV (280) 30
+MOD (281) 31
+EQ (282) 32
+NEQ (283) 33
+LE (284) 34
+GE (285) 35
+LEQ (286) 36
+GEQ (287) 37
+SEM (288) 9 16 17
+COM (289) 3 4
+LB (290) 4 6 41 42
+RB (291) 4 6 41 42
+IDE (292) 3 4 5 6 14 15 40 41 42
+NUM (293) 4 6 38 42
+COL (294) 4 6
+
+
+Symbole nieterminalne i reguły, w których występują
+
+$accept (40)
+    po lewej: 0
+program (41)
+    po lewej: 1 2, po prawej: 0
+declarations (42)
+    po lewej: 3 4 5 6, po prawej: 1 3 4
+commands (43)
+    po lewej: 7 8, po prawej: 1 2 7 10 11 12 13 14 15
+command (44)
+    po lewej: 9 10 11 12 13 14 15 16 17, po prawej: 7 8
+_else (45)
+    po lewej: 18, po prawej: 10
+_while (46)
+    po lewej: 19, po prawej: 12
+_do (47)
+    po lewej: 20, po prawej: 13
+_forFrom (48)
+    po lewej: 21, po prawej: 14 15
+_forTo (49)
+    po lewej: 22, po prawej: 14
+_forDownTo (50)
+    po lewej: 23, po prawej: 15
+_forDo (51)
+    po lewej: 24, po prawej: 14
+_forDoDownTo (52)
+    po lewej: 25, po prawej: 15
+expression (53)
+    po lewej: 26 27 28 29 30 31, po prawej: 9
+condition (54)
+    po lewej: 32 33 34 35 36 37, po prawej: 10 11 12 13
+value (55)
+    po lewej: 38 39, po prawej: 14 15 17 26 27 28 29 30 31 32 33 34
+    35 36 37
+identifier (56)
+    po lewej: 40 41 42, po prawej: 9 16 39
+
+
+Stan 0
+
+    0 $accept: . program $end
+
+    DECLARE  przesunięcie, i przejście do stanu 1
+    BGN      przesunięcie, i przejście do stanu 2
+
+    program  przejście do stanu 3
+
+
+Stan 1
+
+    1 program: DECLARE . declarations BGN commands END
+
+    IDE  przesunięcie, i przejście do stanu 4
+
+    declarations  przejście do stanu 5
+
+
+Stan 2
+
+    2 program: BGN . commands END
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 13
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 3
+
+    0 $accept: program . $end
+
+    $end  przesunięcie, i przejście do stanu 18
+
+
+Stan 4
+
+    5 declarations: IDE .
+    6             | IDE . LB NUM COL NUM RB
+
+    LB  przesunięcie, i przejście do stanu 19
+
+    $domyślnie  redukcja przy użyciu reguły 5 (declarations)
+
+
+Stan 5
+
+    1 program: DECLARE declarations . BGN commands END
+    3 declarations: declarations . COM IDE
+    4             | declarations . COM IDE LB NUM COL NUM RB
+
+    BGN  przesunięcie, i przejście do stanu 20
+    COM  przesunięcie, i przejście do stanu 21
+
+
+Stan 6
+
+   10 command: IF . condition THEN commands _else commands ENDIF
+   11        | IF . condition THEN commands ENDIF
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    condition   przejście do stanu 23
+    value       przejście do stanu 24
+    identifier  przejście do stanu 25
+
+
+Stan 7
+
+   19 _while: WHILE .
+
+    $domyślnie  redukcja przy użyciu reguły 19 (_while)
+
+
+Stan 8
+
+   20 _do: DO .
+
+    $domyślnie  redukcja przy użyciu reguły 20 (_do)
+
+
+Stan 9
+
+   14 command: FOR . IDE _forFrom value _forTo value _forDo commands ENDFOR
+   15        | FOR . IDE _forFrom value _forDownTo value _forDoDownTo commands ENDFOR
+
+    IDE  przesunięcie, i przejście do stanu 26
+
+
+Stan 10
+
+   16 command: READ . identifier SEM
+
+    IDE  przesunięcie, i przejście do stanu 12
+
+    identifier  przejście do stanu 27
+
+
+Stan 11
+
+   17 command: WRITE . value SEM
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 28
+    identifier  przejście do stanu 25
+
+
+Stan 12
+
+   40 identifier: IDE .
+   41           | IDE . LB IDE RB
+   42           | IDE . LB NUM RB
+
+    LB  przesunięcie, i przejście do stanu 29
+
+    $domyślnie  redukcja przy użyciu reguły 40 (identifier)
+
+
+Stan 13
+
+    2 program: BGN commands . END
+    7 commands: commands . command
+
+    END    przesunięcie, i przejście do stanu 30
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 14
+
+    8 commands: command .
+
+    $domyślnie  redukcja przy użyciu reguły 8 (commands)
+
+
+Stan 15
+
+   12 command: _while . condition DO commands ENDWHILE
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    condition   przejście do stanu 32
+    value       przejście do stanu 24
+    identifier  przejście do stanu 25
+
+
+Stan 16
+
+   13 command: _do . commands WHILE condition ENDDO
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 33
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 17
+
+    9 command: identifier . ASSIGN expression SEM
+
+    ASSIGN  przesunięcie, i przejście do stanu 34
+
+
+Stan 18
+
+    0 $accept: program $end .
+
+    $domyślnie  akceptowanie
+
+
+Stan 19
+
+    6 declarations: IDE LB . NUM COL NUM RB
+
+    NUM  przesunięcie, i przejście do stanu 35
+
+
+Stan 20
+
+    1 program: DECLARE declarations BGN . commands END
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 36
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 21
+
+    3 declarations: declarations COM . IDE
+    4             | declarations COM . IDE LB NUM COL NUM RB
+
+    IDE  przesunięcie, i przejście do stanu 37
+
+
+Stan 22
+
+   38 value: NUM .
+
+    $domyślnie  redukcja przy użyciu reguły 38 (value)
+
+
+Stan 23
+
+   10 command: IF condition . THEN commands _else commands ENDIF
+   11        | IF condition . THEN commands ENDIF
+
+    THEN  przesunięcie, i przejście do stanu 38
+
+
+Stan 24
+
+   32 condition: value . EQ value
+   33          | value . NEQ value
+   34          | value . LE value
+   35          | value . GE value
+   36          | value . LEQ value
+   37          | value . GEQ value
+
+    EQ   przesunięcie, i przejście do stanu 39
+    NEQ  przesunięcie, i przejście do stanu 40
+    LE   przesunięcie, i przejście do stanu 41
+    GE   przesunięcie, i przejście do stanu 42
+    LEQ  przesunięcie, i przejście do stanu 43
+    GEQ  przesunięcie, i przejście do stanu 44
+
+
+Stan 25
+
+   39 value: identifier .
+
+    $domyślnie  redukcja przy użyciu reguły 39 (value)
+
+
+Stan 26
+
+   14 command: FOR IDE . _forFrom value _forTo value _forDo commands ENDFOR
+   15        | FOR IDE . _forFrom value _forDownTo value _forDoDownTo commands ENDFOR
+
+    FROM  przesunięcie, i przejście do stanu 45
+
+    _forFrom  przejście do stanu 46
+
+
+Stan 27
+
+   16 command: READ identifier . SEM
+
+    SEM  przesunięcie, i przejście do stanu 47
+
+
+Stan 28
+
+   17 command: WRITE value . SEM
+
+    SEM  przesunięcie, i przejście do stanu 48
+
+
+Stan 29
+
+   41 identifier: IDE LB . IDE RB
+   42           | IDE LB . NUM RB
+
+    IDE  przesunięcie, i przejście do stanu 49
+    NUM  przesunięcie, i przejście do stanu 50
+
+
+Stan 30
+
+    2 program: BGN commands END .
+
+    $domyślnie  redukcja przy użyciu reguły 2 (program)
+
+
+Stan 31
+
+    7 commands: commands command .
+
+    $domyślnie  redukcja przy użyciu reguły 7 (commands)
+
+
+Stan 32
+
+   12 command: _while condition . DO commands ENDWHILE
+
+    DO  przesunięcie, i przejście do stanu 51
+
+
+Stan 33
+
+    7 commands: commands . command
+   13 command: _do commands . WHILE condition ENDDO
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 52
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 34
+
+    9 command: identifier ASSIGN . expression SEM
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    expression  przejście do stanu 53
+    value       przejście do stanu 54
+    identifier  przejście do stanu 25
+
+
+Stan 35
+
+    6 declarations: IDE LB NUM . COL NUM RB
+
+    COL  przesunięcie, i przejście do stanu 55
+
+
+Stan 36
+
+    1 program: DECLARE declarations BGN commands . END
+    7 commands: commands . command
+
+    END    przesunięcie, i przejście do stanu 56
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 37
+
+    3 declarations: declarations COM IDE .
+    4             | declarations COM IDE . LB NUM COL NUM RB
+
+    LB  przesunięcie, i przejście do stanu 57
+
+    $domyślnie  redukcja przy użyciu reguły 3 (declarations)
+
+
+Stan 38
+
+   10 command: IF condition THEN . commands _else commands ENDIF
+   11        | IF condition THEN . commands ENDIF
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 58
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 39
+
+   32 condition: value EQ . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 59
+    identifier  przejście do stanu 25
+
+
+Stan 40
+
+   33 condition: value NEQ . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 60
+    identifier  przejście do stanu 25
+
+
+Stan 41
+
+   34 condition: value LE . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 61
+    identifier  przejście do stanu 25
+
+
+Stan 42
+
+   35 condition: value GE . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 62
+    identifier  przejście do stanu 25
+
+
+Stan 43
+
+   36 condition: value LEQ . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 63
+    identifier  przejście do stanu 25
+
+
+Stan 44
+
+   37 condition: value GEQ . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 64
+    identifier  przejście do stanu 25
+
+
+Stan 45
+
+   21 _forFrom: FROM .
+
+    $domyślnie  redukcja przy użyciu reguły 21 (_forFrom)
+
+
+Stan 46
+
+   14 command: FOR IDE _forFrom . value _forTo value _forDo commands ENDFOR
+   15        | FOR IDE _forFrom . value _forDownTo value _forDoDownTo commands ENDFOR
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 65
+    identifier  przejście do stanu 25
+
+
+Stan 47
+
+   16 command: READ identifier SEM .
+
+    $domyślnie  redukcja przy użyciu reguły 16 (command)
+
+
+Stan 48
+
+   17 command: WRITE value SEM .
+
+    $domyślnie  redukcja przy użyciu reguły 17 (command)
+
+
+Stan 49
+
+   41 identifier: IDE LB IDE . RB
+
+    RB  przesunięcie, i przejście do stanu 66
+
+
+Stan 50
+
+   42 identifier: IDE LB NUM . RB
+
+    RB  przesunięcie, i przejście do stanu 67
+
+
+Stan 51
+
+   12 command: _while condition DO . commands ENDWHILE
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 68
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 52
+
+   13 command: _do commands WHILE . condition ENDDO
+   19 _while: WHILE .
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    IDE  [redukcja przy użyciu reguły 19 (_while)]
+    NUM  [redukcja przy użyciu reguły 19 (_while)]
+
+    condition   przejście do stanu 69
+    value       przejście do stanu 24
+    identifier  przejście do stanu 25
+
+
+Stan 53
+
+    9 command: identifier ASSIGN expression . SEM
+
+    SEM  przesunięcie, i przejście do stanu 70
+
+
+Stan 54
+
+   26 expression: value .
+   27           | value . PLUS value
+   28           | value . MINUS value
+   29           | value . TIMES value
+   30           | value . DIV value
+   31           | value . MOD value
+
+    PLUS   przesunięcie, i przejście do stanu 71
+    MINUS  przesunięcie, i przejście do stanu 72
+    TIMES  przesunięcie, i przejście do stanu 73
+    DIV    przesunięcie, i przejście do stanu 74
+    MOD    przesunięcie, i przejście do stanu 75
+
+    $domyślnie  redukcja przy użyciu reguły 26 (expression)
+
+
+Stan 55
+
+    6 declarations: IDE LB NUM COL . NUM RB
+
+    NUM  przesunięcie, i przejście do stanu 76
+
+
+Stan 56
+
+    1 program: DECLARE declarations BGN commands END .
+
+    $domyślnie  redukcja przy użyciu reguły 1 (program)
+
+
+Stan 57
+
+    4 declarations: declarations COM IDE LB . NUM COL NUM RB
+
+    NUM  przesunięcie, i przejście do stanu 77
+
+
+Stan 58
+
+    7 commands: commands . command
+   10 command: IF condition THEN commands . _else commands ENDIF
+   11        | IF condition THEN commands . ENDIF
+
+    IF     przesunięcie, i przejście do stanu 6
+    ELSE   przesunięcie, i przejście do stanu 78
+    ENDIF  przesunięcie, i przejście do stanu 79
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _else       przejście do stanu 80
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 59
+
+   32 condition: value EQ value .
+
+    $domyślnie  redukcja przy użyciu reguły 32 (condition)
+
+
+Stan 60
+
+   33 condition: value NEQ value .
+
+    $domyślnie  redukcja przy użyciu reguły 33 (condition)
+
+
+Stan 61
+
+   34 condition: value LE value .
+
+    $domyślnie  redukcja przy użyciu reguły 34 (condition)
+
+
+Stan 62
+
+   35 condition: value GE value .
+
+    $domyślnie  redukcja przy użyciu reguły 35 (condition)
+
+
+Stan 63
+
+   36 condition: value LEQ value .
+
+    $domyślnie  redukcja przy użyciu reguły 36 (condition)
+
+
+Stan 64
+
+   37 condition: value GEQ value .
+
+    $domyślnie  redukcja przy użyciu reguły 37 (condition)
+
+
+Stan 65
+
+   14 command: FOR IDE _forFrom value . _forTo value _forDo commands ENDFOR
+   15        | FOR IDE _forFrom value . _forDownTo value _forDoDownTo commands ENDFOR
+
+    TO      przesunięcie, i przejście do stanu 81
+    DOWNTO  przesunięcie, i przejście do stanu 82
+
+    _forTo      przejście do stanu 83
+    _forDownTo  przejście do stanu 84
+
+
+Stan 66
+
+   41 identifier: IDE LB IDE RB .
+
+    $domyślnie  redukcja przy użyciu reguły 41 (identifier)
+
+
+Stan 67
+
+   42 identifier: IDE LB NUM RB .
+
+    $domyślnie  redukcja przy użyciu reguły 42 (identifier)
+
+
+Stan 68
+
+    7 commands: commands . command
+   12 command: _while condition DO commands . ENDWHILE
+
+    IF        przesunięcie, i przejście do stanu 6
+    WHILE     przesunięcie, i przejście do stanu 7
+    DO        przesunięcie, i przejście do stanu 8
+    ENDWHILE  przesunięcie, i przejście do stanu 85
+    FOR       przesunięcie, i przejście do stanu 9
+    READ      przesunięcie, i przejście do stanu 10
+    WRITE     przesunięcie, i przejście do stanu 11
+    IDE       przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 69
+
+   13 command: _do commands WHILE condition . ENDDO
+
+    ENDDO  przesunięcie, i przejście do stanu 86
+
+
+Stan 70
+
+    9 command: identifier ASSIGN expression SEM .
+
+    $domyślnie  redukcja przy użyciu reguły 9 (command)
+
+
+Stan 71
+
+   27 expression: value PLUS . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 87
+    identifier  przejście do stanu 25
+
+
+Stan 72
+
+   28 expression: value MINUS . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 88
+    identifier  przejście do stanu 25
+
+
+Stan 73
+
+   29 expression: value TIMES . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 89
+    identifier  przejście do stanu 25
+
+
+Stan 74
+
+   30 expression: value DIV . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 90
+    identifier  przejście do stanu 25
+
+
+Stan 75
+
+   31 expression: value MOD . value
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 91
+    identifier  przejście do stanu 25
+
+
+Stan 76
+
+    6 declarations: IDE LB NUM COL NUM . RB
+
+    RB  przesunięcie, i przejście do stanu 92
+
+
+Stan 77
+
+    4 declarations: declarations COM IDE LB NUM . COL NUM RB
+
+    COL  przesunięcie, i przejście do stanu 93
+
+
+Stan 78
+
+   18 _else: ELSE .
+
+    $domyślnie  redukcja przy użyciu reguły 18 (_else)
+
+
+Stan 79
+
+   11 command: IF condition THEN commands ENDIF .
+
+    $domyślnie  redukcja przy użyciu reguły 11 (command)
+
+
+Stan 80
+
+   10 command: IF condition THEN commands _else . commands ENDIF
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 94
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 81
+
+   22 _forTo: TO .
+
+    $domyślnie  redukcja przy użyciu reguły 22 (_forTo)
+
+
+Stan 82
+
+   23 _forDownTo: DOWNTO .
+
+    $domyślnie  redukcja przy użyciu reguły 23 (_forDownTo)
+
+
+Stan 83
+
+   14 command: FOR IDE _forFrom value _forTo . value _forDo commands ENDFOR
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 95
+    identifier  przejście do stanu 25
+
+
+Stan 84
+
+   15 command: FOR IDE _forFrom value _forDownTo . value _forDoDownTo commands ENDFOR
+
+    IDE  przesunięcie, i przejście do stanu 12
+    NUM  przesunięcie, i przejście do stanu 22
+
+    value       przejście do stanu 96
+    identifier  przejście do stanu 25
+
+
+Stan 85
+
+   12 command: _while condition DO commands ENDWHILE .
+
+    $domyślnie  redukcja przy użyciu reguły 12 (command)
+
+
+Stan 86
+
+   13 command: _do commands WHILE condition ENDDO .
+
+    $domyślnie  redukcja przy użyciu reguły 13 (command)
+
+
+Stan 87
+
+   27 expression: value PLUS value .
+
+    $domyślnie  redukcja przy użyciu reguły 27 (expression)
+
+
+Stan 88
+
+   28 expression: value MINUS value .
+
+    $domyślnie  redukcja przy użyciu reguły 28 (expression)
+
+
+Stan 89
+
+   29 expression: value TIMES value .
+
+    $domyślnie  redukcja przy użyciu reguły 29 (expression)
+
+
+Stan 90
+
+   30 expression: value DIV value .
+
+    $domyślnie  redukcja przy użyciu reguły 30 (expression)
+
+
+Stan 91
+
+   31 expression: value MOD value .
+
+    $domyślnie  redukcja przy użyciu reguły 31 (expression)
+
+
+Stan 92
+
+    6 declarations: IDE LB NUM COL NUM RB .
+
+    $domyślnie  redukcja przy użyciu reguły 6 (declarations)
+
+
+Stan 93
+
+    4 declarations: declarations COM IDE LB NUM COL . NUM RB
+
+    NUM  przesunięcie, i przejście do stanu 97
+
+
+Stan 94
+
+    7 commands: commands . command
+   10 command: IF condition THEN commands _else commands . ENDIF
+
+    IF     przesunięcie, i przejście do stanu 6
+    ENDIF  przesunięcie, i przejście do stanu 98
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 95
+
+   14 command: FOR IDE _forFrom value _forTo value . _forDo commands ENDFOR
+
+    DO  przesunięcie, i przejście do stanu 99
+
+    _forDo  przejście do stanu 100
+
+
+Stan 96
+
+   15 command: FOR IDE _forFrom value _forDownTo value . _forDoDownTo commands ENDFOR
+
+    DO  przesunięcie, i przejście do stanu 101
+
+    _forDoDownTo  przejście do stanu 102
+
+
+Stan 97
+
+    4 declarations: declarations COM IDE LB NUM COL NUM . RB
+
+    RB  przesunięcie, i przejście do stanu 103
+
+
+Stan 98
+
+   10 command: IF condition THEN commands _else commands ENDIF .
+
+    $domyślnie  redukcja przy użyciu reguły 10 (command)
+
+
+Stan 99
+
+   24 _forDo: DO .
+
+    $domyślnie  redukcja przy użyciu reguły 24 (_forDo)
+
+
+Stan 100
+
+   14 command: FOR IDE _forFrom value _forTo value _forDo . commands ENDFOR
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 104
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 101
+
+   25 _forDoDownTo: DO .
+
+    $domyślnie  redukcja przy użyciu reguły 25 (_forDoDownTo)
+
+
+Stan 102
+
+   15 command: FOR IDE _forFrom value _forDownTo value _forDoDownTo . commands ENDFOR
+
+    IF     przesunięcie, i przejście do stanu 6
+    WHILE  przesunięcie, i przejście do stanu 7
+    DO     przesunięcie, i przejście do stanu 8
+    FOR    przesunięcie, i przejście do stanu 9
+    READ   przesunięcie, i przejście do stanu 10
+    WRITE  przesunięcie, i przejście do stanu 11
+    IDE    przesunięcie, i przejście do stanu 12
+
+    commands    przejście do stanu 105
+    command     przejście do stanu 14
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 103
+
+    4 declarations: declarations COM IDE LB NUM COL NUM RB .
+
+    $domyślnie  redukcja przy użyciu reguły 4 (declarations)
+
+
+Stan 104
+
+    7 commands: commands . command
+   14 command: FOR IDE _forFrom value _forTo value _forDo commands . ENDFOR
+
+    IF      przesunięcie, i przejście do stanu 6
+    WHILE   przesunięcie, i przejście do stanu 7
+    DO      przesunięcie, i przejście do stanu 8
+    FOR     przesunięcie, i przejście do stanu 9
+    ENDFOR  przesunięcie, i przejście do stanu 106
+    READ    przesunięcie, i przejście do stanu 10
+    WRITE   przesunięcie, i przejście do stanu 11
+    IDE     przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 105
+
+    7 commands: commands . command
+   15 command: FOR IDE _forFrom value _forDownTo value _forDoDownTo commands . ENDFOR
+
+    IF      przesunięcie, i przejście do stanu 6
+    WHILE   przesunięcie, i przejście do stanu 7
+    DO      przesunięcie, i przejście do stanu 8
+    FOR     przesunięcie, i przejście do stanu 9
+    ENDFOR  przesunięcie, i przejście do stanu 107
+    READ    przesunięcie, i przejście do stanu 10
+    WRITE   przesunięcie, i przejście do stanu 11
+    IDE     przesunięcie, i przejście do stanu 12
+
+    command     przejście do stanu 31
+    _while      przejście do stanu 15
+    _do         przejście do stanu 16
+    identifier  przejście do stanu 17
+
+
+Stan 106
+
+   14 command: FOR IDE _forFrom value _forTo value _forDo commands ENDFOR .
+
+    $domyślnie  redukcja przy użyciu reguły 14 (command)
+
+
+Stan 107
+
+   15 command: FOR IDE _forFrom value _forDownTo value _forDoDownTo commands ENDFOR .
+
+    $domyślnie  redukcja przy użyciu reguły 15 (command)
